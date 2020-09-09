@@ -1,15 +1,12 @@
 *{
-  border: 1px solid black;
-  justify-content: center;
-  width: 900px
+  font-family: 'Noto Sans JP', sans-serif;
+  background-color: cornflowerblue;
+  display: flex;
+  flex-flow: column
 }
-
 
 img{
   height: 250px;
   width: 250px;
 }
 
-body{
-  
-}
