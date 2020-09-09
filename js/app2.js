@@ -4,7 +4,7 @@
 const uniqueKeywordArray = [];
 const hornedBeastArray = [];
 
-$.ajax('data/page-1.json', { method: 'GET', dataType: 'JSON' })
+$.ajax('data/page-2.json', { method: 'GET', dataType: 'JSON' })
   .then(animals => {
     animals.forEach(hornedBeast => {
       const beast = new Unicorn(hornedBeast);
@@ -57,5 +57,3 @@ function handleChange() {
   $(`section[class=${this.value}]`).show();
 }
 $('select').on('change', handleChange);
-
-
