@@ -1,7 +1,18 @@
-'use strict'
+'use strict';
 
-const unicornArray = [];
-// const keywordArray = [];   
+
+const uniqueKeywordArray = [];
+const hornedBeastArray = [];
+
+$.ajax('data/page-1.json', { method: 'GET', dataType: 'JSON' })
+  .then(animals => {
+    animals.forEach(hornedBeast => {
+      const beast = new Unicorn(hornedBeast);
+      beast.render();
+    })
+    generateUniqueKeywords();
+    generateDropdown();
+  })
 
 function Unicorn(object) {
   this.image = object.image_url;
@@ -9,31 +20,47 @@ function Unicorn(object) {
   this.description = object.description;
   this.keyword = object.keyword;
   this.horns = object.horns;
-  unicornArray.push(this);
+
+  hornedBeastArray.push(this);
 }
-
-
-
-Unicorn.readJSON = () => {
-  $.ajax('data/page-1.json', { method: 'GET', dataType: 'JSON' })
-    .then(data => {
-      data.forEach(item => {
-        let horns = new Unicorn(item);
-        horns.render();
-        console.log(horns);
-      })
-      console.log(unicornArray);
-    })
-}
-$(() => Unicorn.readJSON());
-
 
 Unicorn.prototype.render = function () {
-  const myTemplate = $('#unicorn-template').html();
-  const $newSection = $(`<section>${myTemplate}</section>`);
+  // get the  html inside the photo template section
+  const template = $('#photo-template').html();
+
+  // fill a new section with the template
+  const $newSection = $(`<section class="${this.keyword}">${template}</section>`);
+
+  // access the new section
   $newSection.find('h2').text(this.title);
+  $newSection.find('p').text(`${this.description}. Number of horns ${this.horns}`);
   $newSection.find('img').attr('src', this.image);
-  $newSection.find('p').text(this.description);
+
   $('main').append($newSection);
 }
+
+
+function generateUniqueKeywords() {
+  hornedBeastArray.forEach(beast => {
+    if (!uniqueKeywordArray.includes(beast.keyword)) {
+      uniqueKeywordArray.push(beast.keyword);
+    }
+  })
+}
+
+function generateDropdown() {
+  uniqueKeywordArray.forEach(keyword => {
+    const $newDropdownItem = $('<option></option>');
+    $newDropdownItem.attr('value', keyword);
+    $newDropdownItem.text(keyword);
+    $('select').append($newDropdownItem);
+  })
+}
+
+function handleChange() {
+  $('section').hide();
+  $(`section[class=${this.value}]`).show();
+}
+$('select').on('change', handleChange);
+
 
