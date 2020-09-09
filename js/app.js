@@ -1,6 +1,7 @@
 'use strict'
 
 const unicornArray = [];
+// const keywordArray = [];   
 
 function Unicorn(object) {
   this.image = object.image_url;
