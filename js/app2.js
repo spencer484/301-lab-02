@@ -8,11 +8,13 @@ $.ajax('data/page-2.json', { method: 'GET', dataType: 'JSON' })
   .then(animals => {
     animals.forEach(hornedBeast => {
       const beast = new Unicorn(hornedBeast);
-      beast.render();
     })
+  })
+  .then(() => {
     generateUniqueKeywords();
     generateDropdown();
-  })
+    animalRender();
+  });
 
 function Unicorn(object) {
   this.image = object.image_url;
@@ -24,16 +26,17 @@ function Unicorn(object) {
   hornedBeastArray.push(this);
 }
 
-Unicorn.prototype.render = function () {
-  const template = $('#photo-template').html();
-  const $newSection = $(`<section class="${this.keyword}">${template}</section>`);
-  $newSection.find('h2').text(this.title);
-  $newSection.find('p').text(`${this.description}. Number of horns ${this.horns}`);
-  $newSection.find('img').attr('src', this.image);
-
-  $('main').append($newSection);
+Unicorn.prototype.createHTML = function () {
+  let template = $('#photo-template').html();
+  let html = Mustache.render(template, this);
+  return html;
 }
 
+const animalRender = () => {
+  hornedBeastArray.forEach(beast => {
+    $('main').append(beast.createHTML());
+  })
+}
 
 function generateUniqueKeywords() {
   hornedBeastArray.forEach(beast => {
@@ -53,7 +56,8 @@ function generateDropdown() {
 }
 
 function handleChange() {
-  $('section').hide();
-  $(`section[class=${this.value}]`).show();
+  console.log(this.value);
+  $('div').hide();
+  $(`div[class=${this.value}]`).show();
 }
 $('select').on('change', handleChange);
